@@ -35,6 +35,10 @@ public:
       heapify();
    }
 
+   priority_queue(const priority_queue& other) = default;
+
+   priority_queue(priority_queue&& other) = default;
+
    ~priority_queue()
    {
       delete[] m_heap;

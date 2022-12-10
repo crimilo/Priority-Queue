@@ -1,16 +1,17 @@
 #include "priority_queue.h"
 #include <iostream>
+#include <vector>
 
-#define TEST_ASSERT(condition)                                     \
-   if (!condition)                                                 \
-   {                                                               \
-      std::cerr << "✘ test " << __FUNCTION__ << " failed! <<<\n";  \
-      std::exit(-1);                                               \
-   }                                                               \
-   else                                                            \
-   {                                                               \
-      std::cout << "✓ test " << __FUNCTION__ << " succeeded!\n";   \
-   }                                                               \
+#define TEST_ASSERT(condition)                                      \
+   if (!condition)                                                  \
+   {                                                                \
+      std::cerr << "test " << __FUNCTION__ << " failed! <<<\n";     \
+      std::exit(-1);                                                \
+   }                                                                \
+   else                                                             \
+   {                                                                \
+      std::cout << "test " << __FUNCTION__ << " succeeded!\n";      \
+   }                                                                \
 
 void test0()
 {
@@ -187,5 +188,5 @@ int main()
    test10();
    test11();
 
-   std::cout << "All tests have passed!\n";
+   std::cout << "All tests have passed successfully!\n";
 }

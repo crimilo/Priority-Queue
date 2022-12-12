@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <stdexcept>
+#include <initializer_list>
 
 template <
    class type,
@@ -10,22 +11,26 @@ template <
 class priority_queue
 {
 public:
-   priority_queue(size_t capacity = 9) : m_heap(new type[capacity]), m_capacity(capacity), m_size(0)
+   priority_queue(size_t capacity = 9) : m_capacity(capacity), m_size(0)
    {
-      if (capacity <= 1)
-         throw std::runtime_error("Priority queue initial capacity must be > 1.");
+      if (capacity <= 0)
+         throw std::runtime_error("priority_queue(capacity): capacity must be > 0.");
+
+      m_heap = new type[capacity];
    }
+
+   priority_queue(std::initializer_list<type> il) : priority_queue(il.begin(), il.end()) {}
 
    /*
    * Constructs a heap from the given iterators.
    *
-   * Time complexity: O(N log N)
+   * Time complexity: O(N log N).
    */
    template <class iterator>
    priority_queue(iterator first, iterator last) : m_capacity(last - first + 1), m_size(0)
    {
-      if (m_capacity <= 1)
-         throw std::runtime_error("Priority queue iterators difference must be >= 1.");
+      if (m_capacity <= 0)
+         throw std::runtime_error("priority_queue(first, last): iterators difference must be >= 0.");
 
       m_heap = new type[m_capacity];
 
@@ -35,13 +40,34 @@ public:
       heapify();
    }
 
-   priority_queue(const priority_queue& other) = default;
+   priority_queue(const priority_queue& other) : m_heap(new type[other.m_capacity]), m_capacity(other.m_capacity), m_size(other.m_size)
+   {
+      for (size_t i = 1; i <= other.m_size; i++)
+         m_heap[i] = other.m_heap[i];
+   }
 
-   priority_queue(priority_queue&& other) = default;
+   priority_queue(priority_queue&& other) : m_heap(nullptr)
+   {
+      std::swap(m_heap, other.m_heap);
+      m_size = other.m_size;
+      m_capacity = other.m_capacity;
+   }
 
    ~priority_queue()
    {
       delete[] m_heap;
+   }
+
+   priority_queue& operator=(const priority_queue& other)
+   {
+      m_heap = new type[other.m_capacity];
+      m_capacity = other.m_capacity;
+      m_size = other.m_size;
+      
+      for (size_t i = 1; i <= other.m_size; i++)
+         m_heap[i] = other.m_heap[i];
+
+      return *this;
    }
 
    /*
